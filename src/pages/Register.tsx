@@ -32,8 +32,8 @@ const Register = () => {
   };
 
   return (
-    <div className="min-h-screen relative flex items-center justify-center px-4">
-      
+    <div className="min-h-screen relative flex items-center justify-center px-4 py-6 overflow-hidden">
+
       {/* Background Image */}
       <div
         className="absolute inset-0 bg-cover bg-center"
@@ -46,19 +46,20 @@ const Register = () => {
       {/* Dark Overlay */}
       <div className="absolute inset-0 bg-black/60"></div>
 
-      {/* Soft Glow Effects */}
-      <div className="absolute w-72 h-72 bg-cyan-400/20 rounded-full blur-3xl top-10 left-10"></div>
-      <div className="absolute w-72 h-72 bg-indigo-500/20 rounded-full blur-3xl bottom-10 right-10"></div>
+      {/* Glow Effects */}
+      <div className="absolute w-40 h-40 sm:w-72 sm:h-72 bg-cyan-400/20 rounded-full blur-3xl top-10 left-0 sm:left-10"></div>
+
+      <div className="absolute w-40 h-40 sm:w-72 sm:h-72 bg-indigo-500/20 rounded-full blur-3xl bottom-10 right-0 sm:right-10"></div>
 
       {/* Register Card */}
-      <div className="relative w-full max-w-md bg-white/10 backdrop-blur-2xl border border-white/20 rounded-2xl shadow-2xl p-8 my-8">
-        
+      <div className="relative w-full max-w-sm sm:max-w-md md:max-w-lg bg-white/10 backdrop-blur-2xl border border-white/20 rounded-2xl shadow-2xl p-6 sm:p-8 mx-4 my-6">
+
         {/* Title */}
-        <h2 className="text-3xl font-bold text-center text-white">
+        <h2 className="text-2xl sm:text-3xl font-bold text-center text-white">
           Create Account ✨
         </h2>
 
-        <p className="text-center text-white/60 text-sm mt-2 mb-6">
+        <p className="text-center text-white/60 text-xs sm:text-sm mt-2 mb-6">
           Join your Smart Study Planner
         </p>
 
@@ -68,7 +69,7 @@ const Register = () => {
           placeholder="Full Name"
           value={name}
           onChange={(e) => setName(e.target.value)}
-          className="w-full mb-4 px-4 py-3 rounded-xl bg-white/10 text-white placeholder-white/60 border border-white/10 focus:outline-none focus:ring-2 focus:ring-cyan-400 transition"
+          className="w-full mb-4 px-4 py-3 text-sm sm:text-base rounded-xl bg-white/10 text-white placeholder-white/60 border border-white/10 focus:outline-none focus:ring-2 focus:ring-cyan-400 transition"
         />
 
         {/* Email */}
@@ -77,7 +78,7 @@ const Register = () => {
           placeholder="Email address"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          className="w-full mb-4 px-4 py-3 rounded-xl bg-white/10 text-white placeholder-white/60 border border-white/10 focus:outline-none focus:ring-2 focus:ring-cyan-400 transition"
+          className="w-full mb-4 px-4 py-3 text-sm sm:text-base rounded-xl bg-white/10 text-white placeholder-white/60 border border-white/10 focus:outline-none focus:ring-2 focus:ring-cyan-400 transition"
         />
 
         {/* Password */}
@@ -86,7 +87,7 @@ const Register = () => {
           placeholder="Password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          className="w-full mb-4 px-4 py-3 rounded-xl bg-white/10 text-white placeholder-white/60 border border-white/10 focus:outline-none focus:ring-2 focus:ring-cyan-400 transition"
+          className="w-full mb-4 px-4 py-3 text-sm sm:text-base rounded-xl bg-white/10 text-white placeholder-white/60 border border-white/10 focus:outline-none focus:ring-2 focus:ring-cyan-400 transition"
         />
 
         {/* Role Dropdown */}
@@ -94,24 +95,35 @@ const Register = () => {
           <select
             value={role}
             onChange={(e) => setRole(e.target.value)}
-            className="w-full px-4 py-3 rounded-xl bg-[#2a2d35]/80 text-white border border-white/10 focus:outline-none focus:ring-2 focus:ring-cyan-400 transition appearance-none cursor-pointer"
+            className="w-full px-4 py-3 text-sm sm:text-base rounded-xl bg-[#2a2d35]/80 text-white border border-white/10 focus:outline-none focus:ring-2 focus:ring-cyan-400 transition appearance-none cursor-pointer"
             style={{
               backgroundImage: `url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'></polyline></svg>")`,
-              backgroundRepeat: 'no-repeat',
-              backgroundPosition: 'right 16px center',
-              backgroundSize: '16px'
+              backgroundRepeat: "no-repeat",
+              backgroundPosition: "right 16px center",
+              backgroundSize: "16px",
             }}
           >
-            <option value="STUDENT" className="bg-[#1f222a] text-white">Student</option>
-            <option value="ADMIN" className="bg-[#1f222a] text-white">Admin</option>
+            <option
+              value="STUDENT"
+              className="bg-[#1f222a] text-white"
+            >
+              Student
+            </option>
+
+            <option
+              value="ADMIN"
+              className="bg-[#1f222a] text-white"
+            >
+              Admin
+            </option>
           </select>
         </div>
 
-        {/* Button */}
+        {/* Register Button */}
         <button
           onClick={handleRegister}
           disabled={loading}
-          className={`w-full py-3 rounded-xl font-semibold transition-all duration-300 shadow-lg ${
+          className={`w-full py-3 text-sm sm:text-base rounded-xl font-semibold transition-all duration-300 shadow-lg ${
             loading
               ? "bg-white/20 text-white cursor-not-allowed"
               : "bg-cyan-400 text-black hover:bg-cyan-300 hover:scale-[1.02] shadow-cyan-400/30"
@@ -121,7 +133,7 @@ const Register = () => {
         </button>
 
         {/* Footer */}
-        <p className="text-center text-white/60 text-sm mt-6">
+        <p className="text-center text-white/60 text-xs sm:text-sm mt-6">
           Already have an account?{" "}
           <button
             onClick={() => navigate("/login")}
@@ -130,6 +142,7 @@ const Register = () => {
             Login
           </button>
         </p>
+
       </div>
     </div>
   );
