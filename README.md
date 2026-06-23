@@ -41,11 +41,11 @@ VITE_API_BASE_URL=http://localhost:5000/api/v1
 
 ## Deployment
 
-Frontend URL:
-(To be added after deployment)
+### Frontend
+[Smart Study Planner Frontend](https://smart-study-planner-fe-yv7p.vercel.app/)
 
-Backend API:
-(To be added after backend deployment)
+### Backend API
+[Smart Study Planner Backend](https://study-planner-app-be-i6jl.vercel.app/)
 
 ## Screenshots
 
