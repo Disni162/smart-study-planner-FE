@@ -14,7 +14,7 @@ type Subject = {
   };
 };
 
-const API = "http://localhost:5000/api/v1";
+const API = "https://study-planner-app-be-i6jl.vercel.app/api/v1";
 
 const SubjectManagement = () => {
   const [subjects, setSubjects] = useState<Subject[]>([]);

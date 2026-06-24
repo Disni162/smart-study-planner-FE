@@ -76,7 +76,7 @@ const Profile = () => {
       setUploading(true);
 
       await axios.put(
-        "http://localhost:5000/api/v1/auth/profile-image",
+        "https://study-planner-app-be-i6jl.vercel.app/api/v1/auth/profile-image",
         formData,
         {
           headers: {
