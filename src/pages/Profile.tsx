@@ -36,7 +36,7 @@ const Profile = () => {
   const fetchProfile = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:5000/api/v1/auth/me",
+        "https://study-planner-app-be-i6jl.vercel.app/api/v1/auth/me",
         {
           headers: {
             Authorization: `Bearer ${token}`,
