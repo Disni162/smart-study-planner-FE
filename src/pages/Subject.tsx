@@ -6,7 +6,7 @@ import {
   Edit,
   Trash2,
   Sparkles,
-  Palette,
+  
   X,
 } from "lucide-react";
 

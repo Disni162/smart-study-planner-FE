@@ -19,7 +19,7 @@ import {
   ListTodo,
   TrendingUp,
   PieChart as PieIcon,
-  Sparkles,
+  
 } from "lucide-react";
 
 const Analytics = () => {
