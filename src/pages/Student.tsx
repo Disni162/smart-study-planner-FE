@@ -6,6 +6,8 @@ import {
   CheckCircle,
   Clock,
   TrendingUp,
+  ArrowRight,
+  Sparkles,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
@@ -47,13 +49,8 @@ const Home = () => {
     fetchData();
   }, []);
 
-  const completedTasks = tasks.filter(
-    (task) => task.completed
-  ).length;
-
-  const pendingTasks = tasks.filter(
-    (task) => !task.completed
-  ).length;
+  const completedTasks = tasks.filter((task) => task.completed).length;
+  const pendingTasks = tasks.filter((task) => !task.completed).length;
 
   const productivity = tasks.length
     ? Math.round((completedTasks / tasks.length) * 100)
@@ -61,78 +58,100 @@ const Home = () => {
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center min-h-[50vh]">
-        <h2 className="text-xl font-semibold">
+      <div className="flex flex-col justify-center items-center min-h-[50vh] space-y-3">
+        <div className="relative flex items-center justify-center">
+          <div className="w-10 h-10 border-3 border-indigo-200 border-t-indigo-600 rounded-full animate-spin"></div>
+          <BookOpen className="w-4 h-4 text-indigo-600 absolute animate-pulse" />
+        </div>
+        <p className="text-slate-500 font-medium text-xs tracking-wide animate-pulse">
           Loading Dashboard...
-        </h2>
+        </p>
       </div>
     );
   }
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6 max-w-6xl mx-auto px-4 sm:px-6 py-4">
+      {/* Compact Hero Banner */}
       <div
         className="
+        relative
+        overflow-hidden
         bg-gradient-to-r
-        from-blue-600
-        to-purple-600
-        rounded-3xl
+        from-slate-900
+        via-indigo-950
+        to-slate-900
+        rounded-2xl
         p-5
         sm:p-6
-        lg:p-8
         text-white
-        shadow-xl
+        shadow-lg
+        border
+        border-slate-800
       "
       >
-        <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold">
-          👋 Welcome Back Student
-        </h1>
+        <div className="absolute -top-16 -right-16 w-48 h-48 bg-indigo-500/20 rounded-full blur-2xl pointer-events-none" />
+        <div className="absolute -bottom-16 -left-16 w-48 h-48 bg-purple-500/20 rounded-full blur-2xl pointer-events-none" />
 
-        <p className="mt-3 text-sm sm:text-base text-white/80">
-          Manage your subjects, tasks and improve your productivity
-        </p>
+        <div className="relative z-10 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+          <div>
+            <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-white/10 backdrop-blur-md text-[11px] font-medium text-indigo-200 border border-white/10 mb-2">
+              <Sparkles size={12} className="text-amber-300" />
+              <span>Student Overview</span>
+            </div>
+
+            <h1 className="text-xl sm:text-2xl font-extrabold tracking-tight bg-gradient-to-r from-white via-slate-100 to-indigo-200 bg-clip-text text-transparent">
+              👋 Welcome Back, Student!
+            </h1>
+
+            <p className="mt-1 text-xs sm:text-sm text-slate-300">
+              Manage your subjects, tasks and improve your productivity
+            </p>
+          </div>
+        </div>
       </div>
 
+      {/* Compact Metrics Stats Grid */}
       <div
         className="
         grid
-        grid-cols-1
-        sm:grid-cols-2
-        xl:grid-cols-4
-        gap-4
-        sm:gap-6
+        grid-cols-2
+        lg:grid-cols-4
+        gap-3
+        sm:gap-4
       "
       >
         <Card
           title="Subjects"
           value={subjects.length}
-          icon={<BookOpen />}
+          icon={<BookOpen size={18} />}
           color="blue"
         />
 
         <Card
           title="Pending Tasks"
           value={pendingTasks}
-          icon={<Clock />}
+          icon={<Clock size={18} />}
           color="purple"
         />
 
         <Card
           title="Completed"
           value={completedTasks}
-          icon={<CheckCircle />}
+          icon={<CheckCircle size={18} />}
           color="green"
         />
 
         <Card
           title="Productivity"
           value={`${productivity}%`}
-          icon={<TrendingUp />}
+          icon={<TrendingUp size={18} />}
           color="yellow"
         />
       </div>
 
-      <div>
+      {/* Subjects Section */}
+      <div className="space-y-4">
         <div
           className="
           flex
@@ -140,22 +159,23 @@ const Home = () => {
           sm:flex-row
           sm:justify-between
           sm:items-center
-          gap-4
-          mb-6
+          gap-3
         "
         >
           <div>
             <h2
               className="
-              text-2xl
-              sm:text-3xl
+              text-lg
+              sm:text-xl
               font-bold
+              text-slate-900
+              tracking-tight
             "
             >
               📘 My Subjects
             </h2>
 
-            <p className="text-gray-500">
+            <p className="text-slate-500 text-xs">
               Your learning subjects
             </p>
           </div>
@@ -164,21 +184,29 @@ const Home = () => {
             onClick={() => navigate("/subjects")}
             className="
             flex
-            gap-2
+            gap-1.5
             items-center
             justify-center
-            bg-gradient-to-r
-            from-blue-500
-            to-purple-600
+            bg-indigo-600
+            hover:bg-indigo-700
             text-white
-            px-5
-            py-3
-            rounded-2xl
+            font-semibold
+            text-xs
+            px-4
+            py-2.5
+            rounded-xl
+            shadow-md
+            shadow-indigo-500/20
+            hover:shadow-indigo-500/30
+            hover:scale-[1.01]
+            active:scale-[0.98]
+            transition-all
+            duration-150
             w-full
             sm:w-auto
             "
           >
-            <Plus size={20} />
+            <Plus size={16} />
             Add Subject
           </button>
         </div>
@@ -186,20 +214,34 @@ const Home = () => {
         {subjects.length === 0 ? (
           <div
             className="
-            bg-white
-            rounded-3xl
-            p-10
+            bg-slate-50/50
+            border
+            border-dashed
+            border-slate-200
+            rounded-2xl
+            p-8
             text-center
-            shadow
+            space-y-2
           "
           >
-            <h3 className="text-xl font-semibold">
+            <div className="w-10 h-10 mx-auto rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center">
+              <BookOpen size={20} />
+            </div>
+
+            <h3 className="text-sm font-bold text-slate-800">
               No Subjects Added
             </h3>
 
-            <p className="text-gray-500 mt-2">
+            <p className="text-slate-500 text-xs">
               Create your first subject
             </p>
+
+            <button
+              onClick={() => navigate("/subjects")}
+              className="mt-1 text-xs font-semibold text-indigo-600 hover:text-indigo-700 inline-flex items-center gap-1"
+            >
+              Get started now <ArrowRight size={14} />
+            </button>
           </div>
         ) : (
           <div
@@ -207,89 +249,124 @@ const Home = () => {
             grid
             grid-cols-1
             sm:grid-cols-2
-            xl:grid-cols-3
-            gap-6
+            lg:grid-cols-3
+            gap-4
           "
           >
-            {subjects.map((subject) => (
-              <div
-                key={subject._id}
-                className="
-                bg-white
-                rounded-3xl
-                p-5
-                sm:p-6
-                shadow-md
-                border
-                hover:shadow-xl
-                transition
-                "
-                style={{
-                  borderTop: `5px solid ${
-                    subject.color || "#3b82f6"
-                  }`,
-                }}
-              >
+            {subjects.map((subject) => {
+              const themeColor = subject.color || "#3b82f6";
+              return (
                 <div
+                  key={subject._id}
                   className="
-                  w-14
-                  h-14
+                  group
+                  relative
+                  bg-white
                   rounded-2xl
+                  p-4
+                  sm:p-5
+                  shadow-sm
+                  hover:shadow-lg
+                  border
+                  border-slate-100
+                  hover:-translate-y-0.5
+                  transition-all
+                  duration-200
                   flex
-                  items-center
-                  justify-center
-                  text-white
-                  text-2xl
-                  font-bold
+                  flex-col
+                  justify-between
+                  overflow-hidden
                   "
-                  style={{
-                    backgroundColor:
-                      subject.color || "#3b82f6",
-                  }}
                 >
-                  {subject.title
-                    .charAt(0)
-                    .toUpperCase()}
+                  <div
+                    className="absolute top-0 left-0 right-0 h-1 transition-all duration-200 group-hover:h-1.5"
+                    style={{ backgroundColor: themeColor }}
+                  />
+
+                  <div>
+                    <div className="flex items-center justify-between">
+                      <div
+                        className="
+                        w-10
+                        h-10
+                        rounded-xl
+                        flex
+                        items-center
+                        justify-center
+                        text-white
+                        text-base
+                        font-bold
+                        shadow-sm
+                        transition-transform
+                        duration-200
+                        group-hover:scale-105
+                        "
+                        style={{
+                          backgroundColor: themeColor,
+                        }}
+                      >
+                        {subject.title.charAt(0).toUpperCase()}
+                      </div>
+                    </div>
+
+                    <h3
+                      className="
+                      text-base
+                      font-bold
+                      text-slate-800
+                      mt-3
+                      group-hover:text-indigo-600
+                      transition-colors
+                      "
+                    >
+                      {subject.title}
+                    </h3>
+
+                    <p
+                      className="
+                      text-slate-500
+                      text-xs
+                      mt-1
+                      line-clamp-2
+                      leading-relaxed
+                      "
+                    >
+                      {subject.description || "No description"}
+                    </p>
+                  </div>
+
+                  <button
+                    onClick={() => navigate("/subjects")}
+                    className="
+                    mt-4
+                    w-full
+                    py-2
+                    px-3
+                    rounded-lg
+                    bg-slate-50
+                    hover:bg-slate-900
+                    text-slate-700
+                    hover:text-white
+                    font-medium
+                    text-xs
+                    flex
+                    items-center
+                    justify-center
+                    gap-1.5
+                    transition-all
+                    duration-150
+                    group/btn
+                    "
+                  >
+                    <span>View Details</span>
+                    <ArrowRight
+                      size={14}
+                      className="transition-transform group-hover/btn:translate-x-1"
+                    />
+                  </button>
                 </div>
-
-                <h3
-                  className="
-                  text-xl
-                  font-bold
-                  mt-5
-                  "
-                >
-                  {subject.title}
-                </h3>
-
-                <p
-                  className="
-                  text-gray-500
-                  mt-3
-                  "
-                >
-                  {subject.description ||
-                    "No description"}
-                </p>
-
-                <button
-                  onClick={() =>
-                    navigate("/subjects")
-                  }
-                  className="
-                  mt-6
-                  w-full
-                  py-3
-                  rounded-xl
-                  bg-gray-100
-                  hover:bg-gray-200
-                  transition
-                  "
-                >
-                  View Details
-                </button>
-              </div>
-            ))}
+              );
+            })}
           </div>
         )}
       </div>
@@ -297,43 +374,63 @@ const Home = () => {
   );
 };
 
-const Card = ({
-  title,
-  value,
-  icon,
-  color,
-}: any) => {
+const Card = ({ title, value, icon, color }: any) => {
   const colors: any = {
-    blue: "bg-blue-100 text-blue-600",
-    purple: "bg-purple-100 text-purple-600",
-    green: "bg-green-100 text-green-600",
-    yellow: "bg-yellow-100 text-yellow-600",
+    blue: {
+      bg: "bg-blue-500/10",
+      text: "text-blue-600",
+      border: "border-blue-100",
+    },
+    purple: {
+      bg: "bg-purple-500/10",
+      text: "text-purple-600",
+      border: "border-purple-100",
+    },
+    green: {
+      bg: "bg-emerald-500/10",
+      text: "text-emerald-600",
+      border: "border-emerald-100",
+    },
+    yellow: {
+      bg: "bg-amber-500/10",
+      text: "text-amber-600",
+      border: "border-amber-100",
+    },
   };
+
+  const theme = colors[color] || colors.blue;
 
   return (
     <div
       className="
+      group
       bg-white
-      rounded-3xl
-      p-5
-      sm:p-6
-      shadow-md
+      rounded-2xl
+      p-4
+      shadow-sm
+      hover:shadow-md
       border
+      border-slate-100
+      hover:-translate-y-0.5
+      transition-all
+      duration-200
     "
     >
-      <div className="flex justify-between items-start">
-        <div>
-          <p className="text-gray-400">
+      <div className="flex justify-between items-center">
+        <div className="space-y-0.5">
+          <p className="text-[11px] font-bold uppercase tracking-wider text-slate-400">
             {title}
           </p>
 
           <h2
             className="
-            text-2xl
-            sm:text-3xl
-            lg:text-4xl
-            font-bold
-            mt-2
+            text-xl
+            sm:text-2xl
+            font-extrabold
+            text-slate-800
+            tracking-tight
+            group-hover:text-indigo-600
+            transition-colors
           "
           >
             {value}
@@ -342,9 +439,15 @@ const Card = ({
 
         <div
           className={`
-          p-3
-          rounded-2xl
-          ${colors[color]}
+          p-2.5
+          rounded-xl
+          ${theme.bg}
+          ${theme.text}
+          border
+          ${theme.border}
+          transition-transform
+          duration-200
+          group-hover:scale-105
         `}
         >
           {icon}

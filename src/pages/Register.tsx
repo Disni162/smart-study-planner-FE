@@ -111,10 +111,10 @@ const Register = () => {
             </option>
 
             <option
-              value="ADMIN"
+              value="MANAGER"
               className="bg-[#1f222a] text-white"
             >
-              Admin
+              Manager
             </option>
           </select>
         </div>

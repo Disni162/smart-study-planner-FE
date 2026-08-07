@@ -8,9 +8,11 @@ import {
   Edit,
   FileText,
   Sparkles,
-  Wand2
+  Wand2,
+  Download,
+  StickyNote,
+  Bot,
 } from "lucide-react";
-
 
 type Note = {
   _id: string;
@@ -19,255 +21,105 @@ type Note = {
   createdAt: string;
 };
 
-
-
 const Notes = () => {
-
-
   const [notes, setNotes] = useState<Note[]>([]);
-
   const [title, setTitle] = useState("");
-
   const [content, setContent] = useState("");
-
   const [editId, setEditId] = useState<string | null>(null);
-
   const [aiTopic, setAiTopic] = useState("");
-
   const [aiLoading, setAiLoading] = useState(false);
 
-
   // GET NOTES
-
   const fetchNotes = async () => {
-
     try {
-
       const res = await api.get("/notes");
-
       setNotes(res.data);
-
     } catch (error: any) {
-
-      console.log(
-        error.response?.data || error.message
-      );
-
+      console.log(error.response?.data || error.message);
     }
-
   };
-
-
 
   useEffect(() => {
-
     fetchNotes();
-
   }, []);
 
-
-
-
-
   // CREATE / UPDATE NOTE
-
   const saveNote = async () => {
-
-
     if (!title.trim()) {
-
       alert("Please enter note title");
       return;
-
     }
-
 
     if (!content.trim()) {
-
       alert("Please enter note content");
       return;
-
     }
 
-
-
     try {
-
-
       if (editId) {
-
-
-        await api.put(
-          `/notes/${editId}`,
-          {
-            title: title.trim(),
-            content: content.trim()
-          }
-        );
-
-
+        await api.put(`/notes/${editId}`, {
+          title: title.trim(),
+          content: content.trim(),
+        });
       } else {
-
-
-        await api.post(
-          "/notes",
-          {
-            title: title.trim(),
-            content: content.trim()
-          }
-        );
-
-
+        await api.post("/notes", {
+          title: title.trim(),
+          content: content.trim(),
+        });
       }
 
-
-
       setTitle("");
-
       setContent("");
-
       setEditId(null);
-
       fetchNotes();
-
-
-
     } catch (error: any) {
-
-      console.log(
-        error.response?.data || error.message
-      );
-
+      console.log(error.response?.data || error.message);
     }
-
-
   };
-
-
-
-
-
-
 
   // DELETE NOTE
-
   const deleteNote = async (id: string) => {
-
-
     try {
-
-
-      await api.delete(
-        `/notes/${id}`
-      );
-
-
+      await api.delete(`/notes/${id}`);
       fetchNotes();
-
-
     } catch (error: any) {
-
-      console.log(
-        error.response?.data || error.message
-      );
-
+      console.log(error.response?.data || error.message);
     }
-
-
   };
-
-
-
-
-
-
 
   // EDIT NOTE
-
   const editNote = (note: Note) => {
-
     setTitle(note.title);
-
     setContent(note.content);
-
     setEditId(note._id);
-
   };
-
 
   // AI NOTE GENERATOR
-
   const generateAINote = async () => {
-
-
     if (!aiTopic.trim()) {
-
       alert("Enter topic");
-
       return;
-
     }
-
 
     try {
-
-
       setAiLoading(true);
 
-
-
-      const res = await api.post(
-        "/ai/generate-note",
-        {
-          topic: aiTopic
-        }
-      );
-
-
+      const res = await api.post("/ai/generate-note", {
+        topic: aiTopic,
+      });
 
       setTitle(aiTopic);
-
-
-      setContent(
-        res.data.note
-      );
-
-
-
+      setContent(res.data.note);
       setAiTopic("");
-
-
-
-    }
-    catch (error: any) {
-
-
-      console.log(
-        error.response?.data || error.message
-      );
-
-
+    } catch (error: any) {
+      console.log(error.response?.data || error.message);
       alert("AI generation failed");
-
-
-    }
-    finally {
-
-
+    } finally {
       setAiLoading(false);
-
-
     }
-
-
-
   };
 
-
-
-
   // PDF DOWNLOAD
-
   const downloadPDF = (note: Note) => {
     const doc = new jsPDF();
 
@@ -295,10 +147,7 @@ const Notes = () => {
     // Line
     doc.line(15, 60, 195, 60);
 
-    const lines = doc.splitTextToSize(
-      note.content,
-      170
-    );
+    const lines = doc.splitTextToSize(note.content, 170);
 
     let y = 75;
 
@@ -315,494 +164,379 @@ const Notes = () => {
     doc.save(`${note.title}.pdf`);
   };
 
-
-
-
-
   const cardColors = [
     "from-blue-500 to-cyan-500",
     "from-purple-500 to-pink-500",
-    "from-green-500 to-emerald-500",
-    "from-orange-500 to-red-500",
+    "from-emerald-500 to-teal-500",
+    "from-amber-500 to-orange-500",
     "from-indigo-500 to-violet-500",
   ];
 
-
-
-
-
-
-
   return (
+    <div className="space-y-6 max-w-6xl mx-auto px-4 sm:px-6 py-4">
+      {/* Header Bar Banner */}
+      <div
+        className="
+        relative
+        overflow-hidden
+        bg-gradient-to-r
+        from-slate-900
+        via-indigo-950
+        to-slate-900
+        rounded-2xl
+        p-5
+        sm:p-6
+        text-white
+        shadow-lg
+        border
+        border-slate-800
+      "
+      >
+        <div className="absolute -top-16 -right-16 w-48 h-48 bg-indigo-500/20 rounded-full blur-2xl pointer-events-none" />
+        <div className="absolute -bottom-16 -left-16 w-48 h-48 bg-purple-500/20 rounded-full blur-2xl pointer-events-none" />
 
-    <div className="space-y-8">
+        <div className="relative z-10 flex items-center gap-3.5">
+          <div className="p-3 rounded-xl bg-white/10 backdrop-blur-md text-indigo-300 border border-white/10">
+            <StickyNote size={24} />
+          </div>
 
+          <div>
+            <div className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-white/10 backdrop-blur-md text-[11px] font-medium text-indigo-200 border border-white/10 mb-1">
+              <Sparkles size={12} className="text-amber-300" />
+              <span>Study Materials</span>
+            </div>
 
+            <h1 className="text-xl sm:text-2xl font-extrabold tracking-tight bg-gradient-to-r from-white via-slate-100 to-indigo-200 bg-clip-text text-transparent">
+              📝 My Notes
+            </h1>
 
-      {/* HEADER */}
+            <p className="text-xs sm:text-sm text-slate-300 mt-0.5">
+              Create and manage your study notes effortlessly
+            </p>
+          </div>
+        </div>
+      </div>
 
+      {/* AI Generator Card */}
       <div
         className="
         bg-gradient-to-r
-        from-blue-600
-        to-purple-600
-        rounded-3xl
-        p-8
+        from-indigo-900
+        to-purple-900
+        rounded-2xl
+        p-4
+        sm:p-5
         text-white
-        shadow-xl
-        "
+        shadow-md
+        border
+        border-indigo-800/50
+        space-y-3
+      "
       >
-
-        <h1 className="text-4xl font-bold">
-          📝 My Notes
-        </h1>
-
-
-        <p className="mt-2 text-white/80">
-          Create and manage your study notes
-        </p>
-
-
-      </div>
-
-
-
-      {/* AI GENERATOR */}
-
-      <div
-        className="
-bg-gradient-to-r
-from-purple-600
-to-blue-600
-rounded-3xl
-p-6
-text-white
-shadow-xl
-"
-      >
-
-
-        <div className="flex items-center gap-3 mb-4">
-
-          <Sparkles size={28} />
-
-          <h2 className="text-2xl font-bold">
-            AI Study Note Generator
-          </h2>
-
-
+        <div className="flex items-center gap-2">
+          <div className="p-2 rounded-lg bg-white/10 text-amber-300 border border-white/10">
+            <Bot size={18} />
+          </div>
+          <div>
+            <h2 className="text-sm font-bold text-white">
+              AI Study Note Generator
+            </h2>
+            <p className="text-[11px] text-indigo-200">
+              Generate smart study notes using Gemini AI
+            </p>
+          </div>
         </div>
 
+        <div className="flex flex-col sm:flex-row gap-2.5 pt-1">
+          <input
+            value={aiTopic}
+            onChange={(e) => setAiTopic(e.target.value)}
+            placeholder="Enter topic (Example: React Hooks)"
+            className="
+              flex-1
+              px-3.5
+              py-2
+              rounded-xl
+              bg-white
+              text-slate-800
+              placeholder-slate-400
+              text-xs
+              outline-none
+              focus:ring-2
+              focus:ring-amber-400
+            "
+          />
 
-
-        <p className="mb-4 text-white/80">
-          Generate smart study notes using Gemini AI
-        </p>
-
-
-
-
-        <input
-
-          value={aiTopic}
-
-          onChange={(e) => setAiTopic(e.target.value)}
-
-          placeholder="Enter topic (Example: React Hooks)"
-
-          className="
-w-full
-p-3
-rounded-xl
-text-black
-mb-4
-"
-
-        />
-
-
-
-
-        <button
-
-          onClick={generateAINote}
-
-          disabled={aiLoading}
-
-          className="
-bg-white
-text-purple-700
-px-6
-py-3
-rounded-xl
-flex
-items-center
-gap-2
-font-bold
-"
-
-        >
-
-
-          <Wand2 size={20} />
-
-
-          {
-            aiLoading
-              ?
-              "Generating..."
-              :
-              "Generate AI Note"
-          }
-
-
-        </button>
-
-
-
+          <button
+            onClick={generateAINote}
+            disabled={aiLoading}
+            className="
+              bg-amber-400
+              hover:bg-amber-300
+              text-slate-950
+              px-4
+              py-2
+              rounded-xl
+              flex
+              items-center
+              justify-center
+              gap-1.5
+              font-bold
+              text-xs
+              transition-all
+              disabled:opacity-50
+              shadow-sm
+            "
+          >
+            <Wand2 size={14} />
+            {aiLoading ? "Generating..." : "Generate AI Note"}
+          </button>
+        </div>
       </div>
 
-
-
-      {/* FORM */}
-
+      {/* Form Card */}
       <div
         className="
         bg-white
-        rounded-3xl
-        p-6
-        shadow-md
+        rounded-2xl
         border
-        "
+        border-slate-100
+        shadow-sm
+        p-4
+        sm:p-5
+        space-y-3
+      "
       >
-
-
-        <h2 className="text-2xl font-bold mb-5">
-
-          {
-            editId
-              ?
-              "Edit Note"
-              :
-              "Create New Note"
-          }
-
+        <h2 className="text-sm font-bold text-slate-800 flex items-center gap-2">
+          <Sparkles size={15} className="text-amber-500" />
+          {editId ? "Edit Note" : "Create New Note"}
         </h2>
 
+        <div className="space-y-2.5">
+          <input
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            placeholder="Note title"
+            className="
+              w-full
+              px-3.5
+              py-2.5
+              rounded-xl
+              border
+              border-slate-200
+              bg-slate-50/50
+              text-xs
+              text-slate-800
+              outline-none
+              focus:ring-2
+              focus:ring-indigo-500/20
+              focus:border-indigo-500
+              transition-all
+            "
+          />
 
-
-
-        <input
-
-          value={title}
-
-          onChange={(e) => setTitle(e.target.value)}
-
-          placeholder="Note title"
-
-          className="
-          w-full
-          border
-          rounded-xl
-          p-3
-          mb-4
-          "
-
-        />
-
-
-
-
-
-        <textarea
-
-          value={content}
-
-          onChange={(e) => setContent(e.target.value)}
-
-          placeholder="Write your note..."
-
-          rows={5}
-
-          className="
-          w-full
-          border
-          rounded-xl
-          p-3
-          "
-
-        />
-
-
-
-
+          <textarea
+            value={content}
+            onChange={(e) => setContent(e.target.value)}
+            placeholder="Write your note..."
+            rows={4}
+            className="
+              w-full
+              px-3.5
+              py-2.5
+              rounded-xl
+              border
+              border-slate-200
+              bg-slate-50/50
+              text-xs
+              text-slate-800
+              outline-none
+              focus:ring-2
+              focus:ring-indigo-500/20
+              focus:border-indigo-500
+              transition-all
+              resize-none
+            "
+          />
+        </div>
 
         <button
-
           onClick={saveNote}
-
           className="
-          mt-5
-          flex
-          items-center
-          gap-2
-          bg-gradient-to-r
-          from-blue-500
-          to-purple-600
-          text-white
-          px-6
-          py-3
-          rounded-xl
+            flex
+            items-center
+            justify-center
+            gap-1.5
+            bg-indigo-600
+            hover:bg-indigo-700
+            text-white
+            font-semibold
+            text-xs
+            px-4
+            py-2.5
+            rounded-xl
+            shadow-md
+            shadow-indigo-500/20
+            hover:shadow-indigo-500/30
+            transition-all
+            w-full
+            sm:w-auto
           "
-
         >
-
-          <Plus size={20} />
-
-
-          {
-            editId
-              ?
-              "Update Note"
-              :
-              "Add Note"
-          }
-
-
+          <Plus size={16} />
+          {editId ? "Update Note" : "Add Note"}
         </button>
-
-
-
       </div>
 
-
-
-
-
-
-
-
-
-      {/* NOTES LIST */}
-
-
-      <div>
-
-
-        <h2 className="text-3xl font-bold mb-5">
-
-          Saved Notes
-
+      {/* Notes List Section */}
+      <div className="space-y-3">
+        <h2 className="text-base font-bold text-slate-900 tracking-tight">
+          Saved Notes ({notes.length})
         </h2>
 
-
-
-
-
-        {
-          notes.length === 0
-
-            ?
-
-
-            <div
-              className="
-            bg-white
-            rounded-3xl
-            p-10
+        {notes.length === 0 ? (
+          <div
+            className="
+            bg-slate-50/50
+            border
+            border-dashed
+            border-slate-200
+            rounded-2xl
+            p-8
             text-center
-            shadow
-            "
-            >
-
-              <FileText
-                size={50}
-                className="mx-auto text-gray-400"
-              />
-
-
-              <p className="mt-3 text-gray-500">
-
-                No notes available
-
-              </p>
-
-
+            space-y-2
+          "
+          >
+            <div className="w-10 h-10 mx-auto rounded-xl bg-slate-100 text-slate-400 flex items-center justify-center">
+              <FileText size={20} />
             </div>
-
-
-
-            :
-
-
-
-            <div
-              className="
+            <p className="text-slate-500 text-xs">
+              No notes available. Create or generate one above!
+            </p>
+          </div>
+        ) : (
+          <div
+            className="
             grid
             grid-cols-1
-            md:grid-cols-3
-            gap-6
-            "
-            >
-
-
-              {
-
-                notes.map((note, index) => (
-
-
-                  <div
-
-                    key={note._id}
-
-                    className="
+            sm:grid-cols-2
+            lg:grid-cols-3
+            gap-4
+          "
+          >
+            {notes.map((note, index) => (
+              <div
+                key={note._id}
+                className="
+                  group
+                  relative
                   bg-white
-                  rounded-3xl
-                  overflow-hidden
-                  shadow-lg
-                  hover:shadow-2xl
+                  rounded-2xl
+                  border
+                  border-slate-100
+                  shadow-sm
+                  hover:shadow-md
+                  hover:-translate-y-0.5
                   transition-all
-                  duration-300
-                  hover:-translate-y-1
-                  "
-
-                  >
-
-
-                    <div
-                      className={`
-                    h-3
+                  duration-200
+                  flex
+                  flex-col
+                  justify-between
+                  overflow-hidden
+                "
+              >
+                {/* Top Accent Stripe */}
+                <div
+                  className={`
+                    h-1.5
                     bg-gradient-to-r
                     ${cardColors[index % cardColors.length]}
-                    `}
-                    />
+                  `}
+                />
 
+                <div className="p-4 space-y-2">
+                  <div>
+                    <h3 className="text-sm font-bold text-slate-800 line-clamp-1 group-hover:text-indigo-600 transition-colors">
+                      {note.title}
+                    </h3>
 
-                    <div className="p-6">
-
-
-                      <h3 className="text-xl font-bold">
-                        {note.title}
-                      </h3>
-
-                      <p className="text-xs text-gray-400 mt-1">
-                        {new Date(note.createdAt).toLocaleDateString()}
-                      </p>
-
-                      <p
-                        className="
-  text-gray-500
-  mt-3
-  line-clamp-4
-  "
-                      >
-                        {note.content}
-                      </p>
-
-
-
-
-
-                      <div className="flex gap-3 mt-5">
-
-
-                        <button
-
-                          onClick={() => downloadPDF(note)}
-
-                          className="
-                        bg-green-100
-                        text-green-600
-                        px-4
-                        py-2
-                        rounded-xl
-                        "
-
-                        >
-
-                          PDF
-
-                        </button>
-
-
-
-
-
-                        <button
-
-                          onClick={() => editNote(note)}
-
-                          className="
-                        bg-blue-100
-                        text-blue-600
-                        p-3
-                        rounded-xl
-                        "
-
-                        >
-
-                          <Edit size={18} />
-
-                        </button>
-
-
-
-
-
-
-                        <button
-
-                          onClick={() => deleteNote(note._id)}
-
-                          className="
-                        bg-red-100
-                        text-red-600
-                        p-3
-                        rounded-xl
-                        "
-
-                        >
-
-                          <Trash2 size={18} />
-
-                        </button>
-
-
-
-                      </div>
-
-
-
-                    </div>
-
-
-
+                    <p className="text-[10px] text-slate-400 font-medium mt-0.5">
+                      {new Date(note.createdAt).toLocaleDateString()}
+                    </p>
                   </div>
 
+                  <p className="text-xs text-slate-500 line-clamp-4 leading-relaxed pt-1">
+                    {note.content}
+                  </p>
+                </div>
 
-                ))
+                {/* Actions Bar */}
+                <div className="p-4 pt-0 mt-auto">
+                  <div className="flex items-center gap-1.5 pt-3 border-t border-slate-50">
+                    <button
+                      onClick={() => downloadPDF(note)}
+                      className="
+                        flex-1
+                        flex
+                        items-center
+                        justify-center
+                        gap-1
+                        bg-emerald-50
+                        hover:bg-emerald-600
+                        text-emerald-600
+                        hover:text-white
+                        text-xs
+                        font-semibold
+                        py-1.5
+                        rounded-lg
+                        transition-all
+                      "
+                      title="Download PDF"
+                    >
+                      <Download size={13} />
+                      PDF
+                    </button>
 
-              }
+                    <button
+                      onClick={() => editNote(note)}
+                      className="
+                        p-1.5
+                        rounded-lg
+                        bg-indigo-50
+                        hover:bg-indigo-600
+                        text-indigo-600
+                        hover:text-white
+                        transition-all
+                      "
+                      title="Edit Note"
+                    >
+                      <Edit size={14} />
+                    </button>
 
-
-
-            </div>
-
-
-        }
-
-
-
+                    <button
+                      onClick={() => deleteNote(note._id)}
+                      className="
+                        p-1.5
+                        rounded-lg
+                        bg-rose-50
+                        hover:bg-rose-600
+                        text-rose-600
+                        hover:text-white
+                        transition-all
+                      "
+                      title="Delete Note"
+                    >
+                      <Trash2 size={14} />
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
-
-
-
     </div>
-
-
   );
-
 };
-
 
 export default Notes;
