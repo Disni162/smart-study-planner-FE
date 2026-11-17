@@ -14,7 +14,6 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
-/* HANDLE TOKEN EXPIRE */
 api.interceptors.response.use(
   (res) => res,
   (err) => {
@@ -24,11 +23,13 @@ api.interceptors.response.use(
       err.response?.status === 401 &&
       message === "Token expired"
     ) {
-      alert("Session expired. Please login again.");
-
       localStorage.removeItem("ACCESS_TOKEN");
+      localStorage.removeItem("REFRESH_TOKEN");
 
-      window.location.href = "/login";
+      // Redirect only if not already on login page
+      if (window.location.pathname !== "/login") {
+        window.location.replace("/login");
+      }
     }
 
     return Promise.reject(err);
